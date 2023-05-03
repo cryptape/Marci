@@ -11,4 +11,4 @@ COPY --from=build /usr/src/marci/target/release/marci /app/marci
 COPY --from=build /usr/src/marci/dist /app/marci/dist
 ENV DB_URL="postgres://postgres:postgres@postgres/ckb"
 ENV BIND="0.0.0.0:1800"
-CMD ["./marci --db-url $DB_URL --bind $BIND"]
+CMD ["/app/marci/marci --db-url $DB_URL --bind $BIND"]
