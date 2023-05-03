@@ -39,5 +39,5 @@ fn default_network() -> String {
 }
 
 fn default_timeout() -> u64 {
-    30
+    60
 }

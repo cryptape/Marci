@@ -1,8 +1,10 @@
 mod db;
 mod models;
 
+use actix_cors::Cors;
+use actix_files::Files;
 use db::get_peers;
-use actix_web::{web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{web, App, HttpResponse, HttpServer, Responder, http};
 use tokio_postgres::{Client, NoTls};
 use actix_web::web::Data;
 use crate::models::{NetworkType, QueryParams};
@@ -43,13 +45,13 @@ async fn main() -> std::io::Result<()> {
             Arg::with_name("bind")
                 .long("bind")
                 .takes_value(true)
-                .required(true)
+                .required(false)
                 .default_value("0.0.0.0:1800")
                 .help("The address to bind the server to"),
         )
         .get_matches();
 
-    let db_url = matches.value_of("db_url").unwrap();
+    let db_url = matches.value_of("db").unwrap();
     let bind = matches.value_of("bind").unwrap();
 
     // Read database connection parameters from environment variables
@@ -64,12 +66,20 @@ async fn main() -> std::io::Result<()> {
         }
     });
     // Start the HTTP server
-    HttpServer::new(move || {
+    let app = HttpServer::new(move || {
+        let cors = Cors::default()
+            .allow_any_origin()
+            .allowed_methods(vec!["GET"])
+            .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
+            .allowed_header(http::header::CONTENT_TYPE)
+            .max_age(3600);
         App::new()
+            .wrap(cors)
             .app_data(Data::clone(&client))
             .route("/peer", web::get().to(peer_handler))
+            .service(Files::new("/", "./dist").index_file("index.html"))
     })
-    .bind(bind)?
-    .run()
-    .await
+        .bind(bind)?;
+
+    app.run().await
 }
