@@ -39,5 +39,8 @@ fn default_network() -> String {
 }
 
 fn default_timeout() -> u64 {
-    60
+    std::env::var("MARCI_DEFAULT_TIMEOUT")
+        .unwrap_or("43200".to_string())
+        .parse()
+        .unwrap()
 }
