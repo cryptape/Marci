@@ -9,6 +9,7 @@ pub struct Peer {
     pub(crate) last_seen: Option<SystemTime>,
     pub(crate) country: Option<String>,
     pub(crate) city: Option<String>,
+    pub(crate)  address: String,
 }
 
 pub(crate) enum NetworkType {
