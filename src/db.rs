@@ -1,5 +1,6 @@
 use crate::models::{NetworkType, Peer};
 use std::time::{Duration, SystemTime};
+use regex::Regex;
 use tokio_postgres::Client;
 
 // Define a function to query the database for peers and their location information
@@ -21,10 +22,15 @@ pub(crate) async fn get_peers(
             continue;
         }
 
+        let version: String = row.get(2);
+        let version_short = Regex::new(r"^(.*?)[^0-9.].*$").unwrap().captures(&version).unwrap()[1].to_owned();
+
+
         let peer = Peer {
             id: row.get(0),
             ip: row.get(1),
-            version: row.get(2),
+            version,
+            version_short,
             last_seen: Some(row.get(3)),
             address: row.get(4),
             country: row.get(5),

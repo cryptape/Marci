@@ -6,10 +6,11 @@ pub struct Peer {
     pub(crate) id: i32,
     pub(crate) ip: String,
     pub(crate) version: String,
+    pub(crate) version_short: String,
     pub(crate) last_seen: Option<SystemTime>,
     pub(crate) country: Option<String>,
     pub(crate) city: Option<String>,
-    pub(crate)  address: String,
+    pub(crate) address: String,
 }
 
 pub(crate) enum NetworkType {

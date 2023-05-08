@@ -979,6 +979,7 @@ dependencies = [
  "chrono",
  "clap",
  "env_logger",
+ "regex",
  "serde",
  "serde_json",
  "tokio",
