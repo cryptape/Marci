@@ -3,7 +3,7 @@ Data exposer for https://github.com/code-monad/ckb-analyzer
 
 ## Quick start:
 
-cargo run -- --db-url postgre://127.0.0.1/ckb --bind 0.0.0.0:1800
+`cargo run -- --db-url postgre://127.0.0.1/ckb --bind 0.0.0.0:1800`
 
 and visit `127.0.0.1:1800/peer`
 
