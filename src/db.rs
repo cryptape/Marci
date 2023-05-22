@@ -40,7 +40,7 @@ pub(crate) async fn get_peers(
         let version: String = row.get(2);
         let version_short = Regex::new(r"^(.*?)[^0-9.].*$").unwrap().captures(&version).unwrap()[1].to_owned();
 
-        let latitude : Option<Decimal> = row.get(7);;
+        let latitude : Option<Decimal> = row.get(7);
         let longitude: Option<Decimal> = row.get(8);
 
         let latitude: Option<f64> = latitude.unwrap_or_default().to_f64();
