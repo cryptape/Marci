@@ -11,6 +11,8 @@ pub struct Peer {
     pub(crate) country: Option<String>,
     pub(crate) city: Option<String>,
     pub(crate) address: String,
+    pub(crate) latitude: Option<f64>,
+    pub(crate) longitude: Option<f64>,
 }
 
 pub(crate) enum NetworkType {
