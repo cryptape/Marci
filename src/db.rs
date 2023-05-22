@@ -1,7 +1,9 @@
 use crate::models::{NetworkType, Peer};
 use std::time::{Duration, SystemTime};
 use regex::Regex;
-use tokio_postgres::Client;
+use tokio_postgres::{Client, types::FromSql};
+use rust_decimal::Decimal;
+use rust_decimal::prelude::ToPrimitive;
 
 // Define a function to query the database for peers and their location information
 pub(crate) async fn get_peers(
@@ -38,8 +40,11 @@ pub(crate) async fn get_peers(
         let version: String = row.get(2);
         let version_short = Regex::new(r"^(.*?)[^0-9.].*$").unwrap().captures(&version).unwrap()[1].to_owned();
 
-        let latitude: Option<f64> = row.get(7);
-        let longitude: Option<f64> = row.get(8);
+        let latitude : Option<Decimal> = row.get(7);;
+        let longitude: Option<Decimal> = row.get(8);
+
+        let latitude: Option<f64> = latitude.unwrap_or_default().to_f64();
+        let longitude: Option<f64> = longitude.unwrap_or_default().to_f64();
 
         let peer = Peer {
             id: row.get(0),
@@ -50,8 +55,8 @@ pub(crate) async fn get_peers(
             address: row.get(4),
             country: row.get(5),
             city: row.get(6),
-            latitude,
-            longitude,
+            latitude: latitude,
+            longitude: longitude,
         };
         peers.push(peer);
     }

@@ -19,3 +19,4 @@ tokio = { version = "1.28.0", features = ["full"] }
 chrono = { version = "0.4" , features = ["serde"]}
 clap = {version = "3"}
 regex = "1.8.1"
+rust_decimal = { version = "1.29", features = ["db-postgres","db-tokio-postgres"] }
