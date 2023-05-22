@@ -20,7 +20,7 @@ pub(crate) async fn get_peers(
         peer.version,
         peer.time as last_seen,
         peer.address,
-        ipinfo.country,
+        ipinfo.country_code,
         ipinfo.city,
         ipinfo.latitude,
         ipinfo.longitude
