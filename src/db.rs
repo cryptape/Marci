@@ -13,7 +13,7 @@ pub(crate) async fn get_peers(
         NetworkType::Mirana => "ckb",
         NetworkType::Pudge => "ckb_testnet",
     };
-    let query = format!("SELECT DISTINCT ON (peer.address) peer.id, peer.ip, peer.version, peer.time as last_seen, peer.address, ipinfo.country, ipinfo.city FROM {}.peer LEFT JOIN {}.ipinfo ON peer.ip = ipinfo.ip ORDER BY peer.address, peer.id", main_scheme, main_scheme);
+    let query = format!("SELECT DISTINCT ON (peer.address) peer.id, peer.ip, peer.version, peer.time as last_seen, peer.address, ipinfo.country, ipinfo.city, ipinfo.latitude, ipinfo.longitude FROM {}.peer LEFT JOIN common_info.ip_info AS ipinfo ON peer.ip = ipinfo.ip ORDER BY peer.address, peer.id", main_scheme);
     let rows = client.query(query.as_str(), &[]).await?;
     let mut peers = Vec::new();
     for row in rows {
@@ -25,6 +25,8 @@ pub(crate) async fn get_peers(
         let version: String = row.get(2);
         let version_short = Regex::new(r"^(.*?)[^0-9.].*$").unwrap().captures(&version).unwrap()[1].to_owned();
 
+        let latitude: Option<f64> = row.get(7);
+        let longitude: Option<f64> = row.get(8);
 
         let peer = Peer {
             id: row.get(0),
@@ -35,6 +37,8 @@ pub(crate) async fn get_peers(
             address: row.get(4),
             country: row.get(5),
             city: row.get(6),
+            latitude,
+            longitude,
         };
         peers.push(peer);
     }
