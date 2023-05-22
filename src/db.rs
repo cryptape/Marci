@@ -13,7 +13,20 @@ pub(crate) async fn get_peers(
         NetworkType::Mirana => "ckb",
         NetworkType::Pudge => "ckb_testnet",
     };
-    let query = format!("SELECT DISTINCT ON (peer.address) peer.id, peer.ip, peer.version, peer.time as last_seen, peer.address, ipinfo.country, ipinfo.city, ipinfo.latitude, ipinfo.longitude FROM {}.peer LEFT JOIN common_info.ip_info AS ipinfo ON peer.ip = ipinfo.ip ORDER BY peer.address, peer.id", main_scheme);
+    let query = format!("
+    SELECT DISTINCT ON (peer.address)
+        peer.id,
+        peer.ip,
+        peer.version,
+        peer.time as last_seen,
+        peer.address,
+        ipinfo.country,
+        ipinfo.city,
+        ipinfo.latitude,
+        ipinfo.longitude
+    FROM {}.peer LEFT JOIN common_info.ip_info AS ipinfo
+        ON peer.ip >= ipinfo.ip_range_start AND peer.ip <= ipinfo.ip_range_end
+    ORDER BY peer.address, peer.id", main_scheme);
     let rows = client.query(query.as_str(), &[]).await?;
     let mut peers = Vec::new();
     for row in rows {
