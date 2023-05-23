@@ -18,7 +18,7 @@ pub(crate) async fn get_peers(
     };
 
     let query = format!("
-SELECT
+SELECT DISTINCT ON (peer.address)
     peer.id,
     peer.ip,
     peer.version,
