@@ -19,7 +19,7 @@ pub(crate) async fn get_peers(
     let query = format!("
     SELECT
         peer.id,
-        peer.ip::inet,
+        peer.ip,
         peer.version,
         peer.time as last_seen,
         peer.address
