@@ -44,7 +44,7 @@ ORDER BY peer.address, peer.id", main_scheme, main_scheme);
 
         let version: Option<String> = row.get(2);
 
-        let version_short: String = if version.is_none() {
+        let version_short: String = if version.is_none() || version.clone().unwrap().is_empty() {
             String::new()
         }  else {
             Regex::new(r"^(.*?)[^0-9.].*$").unwrap().captures(&version.clone().unwrap()).unwrap()[1].to_owned()
