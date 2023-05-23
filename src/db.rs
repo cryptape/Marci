@@ -19,7 +19,7 @@ pub(crate) async fn get_peers(
     let query = format!("
     SELECT
         peer.id,
-        peer.ip,
+        peer.ip::inet,
         peer.version,
         peer.time as last_seen,
         peer.address
@@ -47,7 +47,7 @@ pub(crate) async fn get_peers(
             ipinfo.latitude,
             ipinfo.longitude
         FROM common_info.ip_info AS ipinfo
-        WHERE '{}' BETWEEN ipinfo.ip_range_start AND ipinfo.ip_range_end
+        WHERE '{}'::inet BETWEEN ipinfo.ip_range_start::inet AND ipinfo.ip_range_end::inet
         LIMIT 1", ip);
         let ip_info_rows = client.query(ip_info_query.as_str(), &[]).await?;
 
