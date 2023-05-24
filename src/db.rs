@@ -53,16 +53,16 @@ ORDER BY peer.address, peer.id", main_scheme, main_scheme);
         let latitude : Option<Decimal> = row.get(7);
         let longitude: Option<Decimal> = row.get(8);
 
-        let latitude: Option<f64> = latitude.unwrap_or_default().to_f64();
-        let longitude: Option<f64> = longitude.unwrap_or_default().to_f64();
+        let latitude: Option<f64> = if latitude.is_none() { None } else { latitude.unwrap().to_f64() };
+        let longitude: Option<f64> = if longitude.is_none() { None } else { longitude.unwrap().to_f64() };
 
         let peer = Peer {
             id: row.get(0),
-            ip: row.get(1),
+            //ip: row.get(1),
             version: version.unwrap_or(String::new()),
             version_short,
             last_seen: Some(row.get(3)),
-            address: row.get(4),
+            //address: row.get(4),
             country: row.get(5),
             city: row.get(6),
             latitude,
