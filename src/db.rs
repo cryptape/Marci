@@ -18,7 +18,7 @@ pub(crate) async fn get_peers(
     };
 
     let query = format!("
-SELECT DISTINCT ON (peer.address)
+SELECT DISTINCT ON (peer.address, peerID)
     peer.id,
     peer.ip,
     peer.version,
@@ -27,11 +27,13 @@ SELECT DISTINCT ON (peer.address)
     ipinfo.country,
     ipinfo.city,
     lat_info.latitude as latitude,
-    lat_info.longitude as longitude
+    lat_info.longitude as longitude,
+    SUBSTRING(peer.address from 'p2p/(.*)$') as peerID
 FROM {}.peer
 JOIN {}.ipinfo AS ipinfo ON peer.ip = ipinfo.ip
 LEFT JOIN common_info.lat_info AS lat_info ON (ipinfo.country = lat_info.country_code AND ( ipinfo.city = lat_info.city OR ipinfo.city = lat_info.state1 OR ipinfo.city = lat_info.state2))
-ORDER BY peer.address, peer.id", main_scheme, main_scheme);
+ORDER BY peer.address, SUBSTRING(peer.address from 'p2p/(.*)$'), (peer.address LIKE '/ip4/%') DESC, peer.id", main_scheme, main_scheme);
+
 
     let rows = client.query(query.as_str(), &[]).await?;
     let mut peers = Vec::new();
