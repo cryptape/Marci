@@ -28,7 +28,8 @@ SELECT DISTINCT ON (peer.address, peerID)
     ipinfo.city,
     ipinfo.latitude as latitude,
     ipinfo.longitude as longitude,
-    peer.peer_id as peerID
+    peer.peer_id as peerID,
+    peer.node_type
 FROM {}.peer
 JOIN {}.ipinfo AS ipinfo ON peer.ip = ipinfo.ip
 ORDER BY peer.address, peer.peer_id, (peer.address LIKE '/ip4/%') DESC, peer.time, peer.id", main_scheme, main_scheme);
@@ -68,6 +69,7 @@ ORDER BY peer.address, peer.peer_id, (peer.address LIKE '/ip4/%') DESC, peer.tim
             city: row.get(6),
             latitude,
             longitude,
+            node_type: row.get(10),
         };
         peers.push(peer);
     }
