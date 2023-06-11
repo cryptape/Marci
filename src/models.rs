@@ -13,6 +13,7 @@ pub struct Peer {
     //pub(crate) address: String,
     pub(crate) latitude: Option<f64>,
     pub(crate) longitude: Option<f64>,
+    pub(crate) node_type: i32, // use i32 here cuz orm limitation
 }
 
 pub(crate) enum NetworkType {
