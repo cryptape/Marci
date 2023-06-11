@@ -26,13 +26,12 @@ SELECT DISTINCT ON (peer.address, peerID)
     peer.address,
     ipinfo.country,
     ipinfo.city,
-    lat_info.latitude as latitude,
-    lat_info.longitude as longitude,
-    SUBSTRING(peer.address from 'p2p/(.*)$') as peerID
+    ipinfo.latitude as latitude,
+    ipinfo.longitude as longitude,
+    peer.peer_id as peerID
 FROM {}.peer
 JOIN {}.ipinfo AS ipinfo ON peer.ip = ipinfo.ip
-LEFT JOIN common_info.lat_info AS lat_info ON (ipinfo.country = lat_info.country_code AND ( ipinfo.city = lat_info.city OR ipinfo.city = lat_info.state1 OR ipinfo.city = lat_info.state2))
-ORDER BY peer.address, SUBSTRING(peer.address from 'p2p/(.*)$'), (peer.address LIKE '/ip4/%') DESC, peer.id", main_scheme, main_scheme);
+ORDER BY peer.address, peer.peer_id, (peer.address LIKE '/ip4/%') DESC, peer.time, peer.id", main_scheme, main_scheme);
 
 
     let rows = client.query(query.as_str(), &[]).await?;
