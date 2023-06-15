@@ -18,7 +18,7 @@ pub(crate) async fn get_peers(
     };
 
     let query = format!("
-SELECT DISTINCT ON (peer.address, peerID)
+SELECT DISTINCT ON (peerID)
     peer.id,
     peer.ip,
     peer.version,
@@ -32,7 +32,7 @@ SELECT DISTINCT ON (peer.address, peerID)
     peer.node_type
 FROM {}.peer
 JOIN {}.ipinfo AS ipinfo ON peer.ip = ipinfo.ip
-ORDER BY peer.address, peer.peer_id, (peer.address LIKE '/ip4/%') DESC, peer.time, peer.id", main_scheme, main_scheme);
+ORDER BY peer.peer_id, (peer.address LIKE '/ip4/%') DESC, peer.time, peer.id", main_scheme, main_scheme);
 
 
     let rows = client.query(query.as_str(), &[]).await?;
