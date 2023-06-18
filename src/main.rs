@@ -1,23 +1,23 @@
 mod db;
 mod models;
 
-use actix_cors::Cors;
-use actix_files::Files;
-use db::get_peers;
-use actix_web::{web, App, HttpResponse, HttpServer, Responder, http};
-use tokio_postgres::{Client, NoTls};
-use actix_web::web::Data;
 use crate::models::{NetworkType, QueryParams};
+use actix_cors::Cors;
+use actix_web::web::Data;
+use actix_web::{http, web, App, HttpResponse, HttpServer, Responder};
 use clap::Arg;
+use db::get_peers;
+use tokio_postgres::{Client, NoTls};
 
 // Define a handler function for the "/peer" endpoint
 async fn peer_handler(
-    query_aprams: web::Query<QueryParams>,
+    query_params: web::Query<QueryParams>,
     client: web::Data<Client>,
 ) -> impl Responder {
     match get_peers(
-        NetworkType::from(query_aprams.network.clone()),
-        query_aprams.offline_timeout,
+        NetworkType::from(query_params.network.clone()),
+        query_params.offline_timeout,
+        query_params.unknown_offline_timeout,
         &client,
     )
     .await
@@ -77,9 +77,9 @@ async fn main() -> std::io::Result<()> {
             .wrap(cors)
             .app_data(Data::clone(&client))
             .route("/peer", web::get().to(peer_handler))
-            .service(Files::new("/", "./dist").index_file("index.html"))
+            .route("/", web::get().to(peer_handler))
     })
-        .bind(bind)?;
+    .bind(bind)?;
 
     app.run().await
 }

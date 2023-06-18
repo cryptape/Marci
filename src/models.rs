@@ -37,6 +37,8 @@ pub struct QueryParams {
     pub(crate) network: String,
     #[serde(default = "default_timeout")]
     pub(crate) offline_timeout: u64,
+    #[serde(default = "default_unknown_timeout")]
+    pub(crate) unknown_offline_timeout: u64,
 }
 
 fn default_network() -> String {
@@ -46,6 +48,13 @@ fn default_network() -> String {
 fn default_timeout() -> u64 {
     std::env::var("MARCI_DEFAULT_TIMEOUT")
         .unwrap_or("43200".to_string())
+        .parse()
+        .unwrap()
+}
+
+fn default_unknown_timeout() -> u64 {
+    std::env::var("MARCI_DEFAULT_UNKNOWN_TIMEOUT")
+        .unwrap_or("1440".to_string())
         .parse()
         .unwrap()
 }
