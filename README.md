@@ -1,5 +1,8 @@
 # Marci
-Data exposer for https://github.com/code-monad/ckb-analyzer
+
+Data exposer for [ckb-node-probe](https://github.com/cryptape/ckb-node-probe)
+
+You'll need to setup & run the probe before use this project
 
 ## Quick start:
 
@@ -7,12 +10,6 @@ Data exposer for https://github.com/code-monad/ckb-analyzer
 
 and visit `127.0.0.1:1800/peer`
 
-## How-to bundle frontend page
+## Frontend
 
-Checkout [Marci-Rebound](https://github.com/code-monad/marci-rebound), build and copy the `dist` of `Marci-Rebound` output into [/dist](./dist)
-
-```bash
-git clone https://github.com/code-monad/marci-rebound && cd marci-rebound
-ng build --configuration=production
-cp dist/marci-rebound/* ${MARCI_SRC_DIR}/dist # replace with your work dir
-```
+For visualization, use [ckb-node-probe-frontend](https://github.com/cryptape/ckb-node-probe-frontend)https://github.com/cryptape/ckb-node-probe-frontend
