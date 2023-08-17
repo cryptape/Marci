@@ -34,8 +34,9 @@ SELECT DISTINCT ON (peerID)
     peer.node_type
 FROM {}.peer
 JOIN {}.ipinfo AS ipinfo ON peer.ip = ipinfo.ip
+WHERE last_seen >= NOW() - INTERVAL '{} min'
 ORDER BY peer.peer_id, (peer.address LIKE '/ip4/%') DESC, peer.time, peer.id",
-        main_scheme, main_scheme
+        main_scheme, main_scheme, offline_min
     );
 
     let rows = client.query(query.as_str(), &[]).await?;
@@ -48,10 +49,6 @@ ORDER BY peer.peer_id, (peer.address LIKE '/ip4/%') DESC, peer.time, peer.id",
         if version.clone().unwrap_or_default().is_empty() {
             // unknown peer, use another timeout
             if last_seen.elapsed().unwrap() > Duration::from_secs(unknown_offline_min * 60) {
-                continue;
-            }
-        } else {
-            if last_seen.elapsed().unwrap() > Duration::from_secs(offline_min * 60) {
                 continue;
             }
         }
