@@ -16,6 +16,7 @@ pub struct Peer {
     pub(crate) node_type: i32, // use i32 here cuz orm limitation
 }
 
+#[derive(Clone, Copy)]
 pub(crate) enum NetworkType {
     Mirana,
     Pudge,
