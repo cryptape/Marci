@@ -39,6 +39,8 @@ ORDER BY peer.peer_id, (peer.address LIKE '/ip4/%') DESC, peer.time, peer.id",
         main_scheme, main_scheme, offline_min
     );
 
+    println!("{}", query);
+
     let rows = client.query(query.as_str(), &[]).await?;
     let mut peers = Vec::new();
 
