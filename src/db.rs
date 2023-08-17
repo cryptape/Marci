@@ -34,7 +34,7 @@ SELECT DISTINCT ON (peerID)
     peer.node_type
 FROM {}.peer
 JOIN {}.ipinfo AS ipinfo ON peer.ip = ipinfo.ip
-WHERE last_seen >= NOW() - INTERVAL '{} min'
+WHERE peer.time >= NOW() - INTERVAL '{} min'
 ORDER BY peer.peer_id, (peer.address LIKE '/ip4/%') DESC, peer.time, peer.id",
         main_scheme, main_scheme, offline_min
     );
